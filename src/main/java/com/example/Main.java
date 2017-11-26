@@ -82,12 +82,12 @@ public class Main {
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS bonita (mensaje varchar(500))");
-            stmt.executeUpdate("INSERT INTO bonita VALUES ('Juan Pablo Arevalo')");
+            stmt.executeUpdate("INSERT INTO bonita VALUES ('"+consumidor.mensaje+"')");
             ResultSet rs = stmt.executeQuery("SELECT mensaje FROM bonita");
 
             ArrayList<String> output = new ArrayList<String>();
             while (rs.next()) {
-                output.add("Read from DB: " + rs.getTimestamp("mensaje"));
+                output.add("Read from DB: " + rs.getString("mensaje"));
             }
 
             model.put("records", output);
