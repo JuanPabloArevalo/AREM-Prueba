@@ -84,7 +84,7 @@ public class Main {
                 Statement stmt = connection.createStatement();
                 stmt.executeUpdate("CREATE TABLE IF NOT EXISTS bonita (mensaje varchar(800))");
                 stmt.executeUpdate("INSERT INTO bonita VALUES ('" + consumidor.mensaje + "')");
-
+                stmt.executeUpdate("DELETE FROM bonita ");
             } catch (Exception e) {
                 model.put("message", e.getMessage());
                 return "error";
