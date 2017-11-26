@@ -79,15 +79,23 @@ public class Main {
         Consumidor consumidor = new Consumidor();
         consumidor.run();
 
+        if (!consumidor.mensaje.isEmpty()) {
+            try (Connection connection = dataSource.getConnection()) {
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS bonita (mensaje varchar(800))");
+                stmt.executeUpdate("INSERT INTO bonita VALUES ('" + consumidor.mensaje + "')");
+
+            } catch (Exception e) {
+                model.put("message", e.getMessage());
+                return "error";
+            }
+        }
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS bonita (mensaje varchar(500))");
-            stmt.executeUpdate("INSERT INTO bonita VALUES ('"+consumidor.mensaje+"')");
             ResultSet rs = stmt.executeQuery("SELECT mensaje FROM bonita");
-
             ArrayList<String> output = new ArrayList<String>();
             while (rs.next()) {
-                output.add("Read from DB: " + rs.getString("mensaje"));
+                output.add("Logs: " + rs.getString("mensaje"));
             }
 
             model.put("records", output);
@@ -96,6 +104,7 @@ public class Main {
             model.put("message", e.getMessage());
             return "error";
         }
+
     }
 
     @Bean
